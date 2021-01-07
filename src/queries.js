@@ -10,11 +10,10 @@ query {
   }
 }
 `
-
-export const ALL_BOOKS = gql`
-query filterBooksByGenre($genre: String){
-  allBooks(genre: $genre)  {
-	title
+const BOOK_DETAILS = gql`
+  fragment BookDetails on Book {
+	id
+    title
 	published
     author {
 		name
@@ -22,7 +21,14 @@ query filterBooksByGenre($genre: String){
 	}
 	genres
   }
+`
+export const ALL_BOOKS = gql`
+query filterBooksByGenre($genre: String){
+  allBooks(genre: $genre)  {
+	...BookDetails
+  }
 }
+${BOOK_DETAILS}
 `
 
 export const ME = gql`
@@ -70,4 +76,13 @@ export const LOGIN = gql`
       value
     }
   }
+`
+
+export const BOOK_ADDED = gql`
+  subscription {
+    bookAdded {
+      ...BookDetails
+    }
+  }
+  ${BOOK_DETAILS}
 `
